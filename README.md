@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Holy Water • Reservas (Azure)
 
 Painel web (React + Vite) + API (Node/Express) em um único serviço (mesmo host).  
@@ -60,3 +61,7 @@ Se você já usa `sslmode=require` na URL, mantenha também `PG_SSL=true`.
 Endpoints existem, mas a integração está behind feature flag:
 - WHATSAPP_ENABLED=false (default)
 Quando Meta liberar e você quiser integrar, a base já está separada em `/api/whatsapp/*`.
+=======
+# holy-unificado
+appReserva
+>>>>>>> d5a0da92d8f77517845e9845fcd0a64864f2808d
