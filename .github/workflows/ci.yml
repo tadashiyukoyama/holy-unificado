@@ -1,0 +1,60 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: holywater
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/holywater
+      PG_SSL: "false"
+      JWT_SECRET: "ci-secret-ci-secret-ci-secret"
+      RUN_MIGRATIONS: "true"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install
+        run: npm install
+
+      - name: Typecheck
+        run: npm run check
+
+      - name: Build
+        run: npm run build
+
+      - name: Smoke (health)
+        run: |
+          node dist/index.js &
+          for i in $(seq 1 30); do
+            if curl -sSf http://localhost:3000/api/health > /dev/null; then
+              echo "health ok"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "health failed"
+          exit 1
