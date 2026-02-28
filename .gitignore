@@ -108,3 +108,10 @@ temp/
 
 # Webdev artifacts (checkpoint zips, migrations, etc.)
 .webdev/
+
+clean/
+**/clean/
+.env
+node_modules/
+dist/
+data/
